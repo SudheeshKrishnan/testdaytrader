@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mysqlquotes
+  name: mysqlquotes
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysqlquotes
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysqlquotes
+    spec:
+      containers:
+      - env:
+        - name: MYSQL_DATABASE
+          value: quotes
+        - name: MYSQL_PASSWORD
+          value: dummy
+        - name: MYSQL_ROOT_PASSWORD
+          value: dummy
+        - name: MYSQL_USER
+          value: sudheesh
+        image: mysql:5
+        args: ["--ignore-db-dir=lost+found"]
+        name: mysqlquotes
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: mysql-quotesdatabase-data-volume
+      restartPolicy: Always
+      volumes:
+      - name: mysql-quotesdatabase-data-volume
+        persistentVolumeClaim:
+          claimName: mysql-quotesdatabase-data-volume

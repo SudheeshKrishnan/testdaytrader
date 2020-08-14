@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: mysqlquotes
+  name: mysqlquotes
+  namespace: default
+spec:
+  type: LoadBalancer
+  ports:
+  - name: "3308"
+    port: 3308
+    targetPort: 3306
+  selector:
+    app: mysqlquotes
